@@ -1,0 +1,30 @@
+- name: judge-score
+  system:
+    value: >
+      Please act as an impartial judge and evaluate the quality of the response provided by an AI assistant.
+  user:
+    value: >
+      You will be evaluating how well a summary captures the intentions of a user's query.
+
+      Here is the user's original query:
+      <query>
+      "$QUERY"
+      </query>
+
+      Please read the query carefully to understand what the user's intentions are.
+
+      Here is a summary that attempts to capture the intentions of the query:
+      <summary>
+      "$SUMMARY"
+      </summary>
+
+      Please extract the intentions captured in the summary. Note that if there are multiple intentions,
+      they will be separated by && signs.
+
+      Now, compare the intentions you identified from the original query to the intentions captured in the
+      summary. Determine how well you think the summary covers the key intentions from the query.
+
+      Write a short explanation of your reasoning in 20 words or less inside <reasoning> tags.
+
+      Finally, provide an integer score from 0 to 100 inside <score> tags indicating how well the summary captures
+      the query's intentions, with 0 meaning not at all, and 100 meaning it fully captures all of the query's intentions.

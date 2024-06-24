@@ -1,0 +1,34 @@
+{
+  "dataset_path": "datasets/s3/dataset.csv",
+  "label_col": "label_col",
+  "project": "Model validation",
+  "task": "task_name",
+  "prompt": {
+    "name": "prompt-name",
+    "tenant": "tenant_name",
+    "path": "prompts/task_name/prompts.yml",
+    "version": 1
+  },
+  "model": "gemini-1.5-pro",
+  "client": {
+    "type": "research",
+    "config": {
+      "model_id": "gemini-1.5-pro",
+      "base_url": "",
+      "type": "gemini",
+      "model_options": {
+        "top_p": 1,
+        "temperature": 0,
+        "max_output_tokens": 512
+      }
+    }
+  },
+  "aspects": [
+    {
+      "id": "Generation",
+      "params": {
+        "prompt_name": "judge-score"
+      }
+    }
+  ]
+}

@@ -1,0 +1,35 @@
+{
+  "dataset_path": "datasets/s3/dataset.csv",
+  "label_col": "label_col",
+  "project": "Model validation",
+  "task": "task_name",
+  "prompt": {
+    "name": "prompt-name",
+    "tenant": "tenant_name",
+    "path": "prompts/task_name/prompts.yml",
+    "version": 1
+  },
+  "model": "gpt4-turbo",
+  "client": {
+    "type": "research",
+    "config": {
+      "model_id": "GPT4",
+      "base_url": "fill_in_base_url_here",
+      "type": "openai",
+      "model_options": {
+        "top_p": 1,
+        "temperature": 1,
+        "max_tokens": 512,
+        "stream": true
+      }
+    }
+  },
+  "aspects": [
+    {
+      "id": "Generation",
+      "params": {
+        "prompt_name": "judge-score"
+      }
+    }
+  ]
+}

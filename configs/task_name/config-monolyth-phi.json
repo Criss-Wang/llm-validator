@@ -1,0 +1,35 @@
+{
+  "model": "phi-3-mini-128k-instruct",
+  "dataset_path": "datasets/s3/dataset.csv",
+  "label_col": "label_col",
+  "project": "Model validation",
+  "task": "task_name",
+  "prompt": {
+    "name": "prompt-name",
+    "tenant": "tenant_name",
+    "path": "prompts/task_name/prompts.yml",
+    "version": 1
+  },
+  "client": {
+    "type": "research",
+    "config": {
+      "model_id": "phi-3-mini-128k-instruct",
+      "base_url": "https://api.monolyth.ai/v1",
+      "type": "monolyth",
+      "model_options": {
+        "top_p": 1,
+        "temperature": 1,
+        "max_tokens": 512,
+        "stream": true
+      }
+    }
+  },
+  "aspects": [
+    {
+      "id": "Generation",
+      "params": {
+        "prompt_name": "judge-score"
+      }
+    }
+  ]
+}
