@@ -15,7 +15,7 @@ handlers:
     filters: [ ]
 
 loggers:
-  llm_benchmark:
+  llm_validation:
     level: DEBUG
     handlers: [console]
     propagate: False

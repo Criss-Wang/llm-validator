@@ -1,7 +1,7 @@
 import pytest
 
-from llm_benchmark.aspects.regex_match import RegexMatch
-from llm_benchmark.aspects.registry import create_aspect
+from llm_validation.aspects.regex_match import RegexMatch
+from llm_validation.aspects.registry import create_aspect
 
 
 @pytest.mark.parametrize(

@@ -1,7 +1,7 @@
 import pytest
 
-from llm_benchmark.aspects.json_structure import JsonStructure
-from llm_benchmark.aspects.registry import create_aspect
+from llm_validation.aspects.json_structure import JsonStructure
+from llm_validation.aspects.registry import create_aspect
 
 
 def test_fields_param_is_required():

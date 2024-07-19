@@ -1,7 +1,7 @@
 import pytest
 
-from llm_benchmark.aspects.registry import create_aspect
-from llm_benchmark.aspects.valid_json import ValidJson
+from llm_validation.aspects.registry import create_aspect
+from llm_validation.aspects.valid_json import ValidJson
 
 
 @pytest.mark.parametrize(

@@ -12,3 +12,4 @@ requests~=2.31.0
 boto3~=1.34.60
 openai>=1.0
 together==1.1.3
+anthropic==0.29.0

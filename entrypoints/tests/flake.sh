@@ -3,4 +3,4 @@
 set -e
 
 pip install --quiet -r requirements.dev.txt
-python -m flake8 --max-line-length=88 llm_benchmark tests
+python -m flake8 --max-line-length=88 llm_validation tests

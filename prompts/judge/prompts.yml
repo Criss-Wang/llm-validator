@@ -1,30 +1,17 @@
 - name: judge-score
   system:
     value: >
-      Please act as an impartial judge and evaluate the quality of the response provided by an AI assistant.
+      You are a code generation quality judge responsible for rating the generated code quality with regard to expected code. Given the $Query, $GeneratedCode and the $ExpectedCode, please output the following json as your response: {{"reason":str, "code_quality": str, "response_quality": str}}. 
+      - Put your thoughts and explanations in the "reason" field. 
+      - For "code_quality", select one of the following word as your rating: ["correct", "incomplete", "wrong"]. "correct" is when the code is correct and addressed the user request; "incomplete" is when the code is correct, but lacks some necessary components, for example, no dependencies imported, variables used without define, etc. "wrong" is when the generated code is wrong.
+      - For "response_quality", select one of the following word as your rating: ["good", "fair", "bad"].
   user:
     value: >
-      You will be evaluating how well a summary captures the intentions of a user's query.
+      The $Query is:
+      $user_request
+      The $GeneratedCode is:
+      {generated_code_answer}
+      The $ExpectedCode is:
+      {expected_code_answer}
 
-      Here is the user's original query:
-      <query>
-      "$QUERY"
-      </query>
-
-      Please read the query carefully to understand what the user's intentions are.
-
-      Here is a summary that attempts to capture the intentions of the query:
-      <summary>
-      "$SUMMARY"
-      </summary>
-
-      Please extract the intentions captured in the summary. Note that if there are multiple intentions,
-      they will be separated by && signs.
-
-      Now, compare the intentions you identified from the original query to the intentions captured in the
-      summary. Determine how well you think the summary covers the key intentions from the query.
-
-      Write a short explanation of your reasoning in 20 words or less inside <reasoning> tags.
-
-      Finally, provide an integer score from 0 to 100 inside <score> tags indicating how well the summary captures
-      the query's intentions, with 0 meaning not at all, and 100 meaning it fully captures all of the query's intentions.
+      Output your judge response with the json, do not include anything else. The response is:

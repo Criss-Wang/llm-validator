@@ -3,9 +3,9 @@ import os
 
 import pytest
 
-from llm_benchmark.aspects.json_compare import JsonCompare
-from llm_benchmark.aspects.registry import create_aspect
-from llm_benchmark.data.data_model import LLMResultRecord
+from llm_validation.aspects.json_compare import JsonCompare
+from llm_validation.aspects.registry import create_aspect
+from llm_validation.data.data_model import LLMResultRecord
 
 
 def _get_record_object(strict):
