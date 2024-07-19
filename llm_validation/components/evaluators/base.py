@@ -2,7 +2,7 @@ from typing import List, Dict
 
 from llm_validation.app.configs import EvaluatorConfig
 from llm_validation.components.results import Result
-from llm_validation.components.factory.metric_factory import init_metric
+from llm_validation.components.factories.metric_factory import init_metric
 
 
 class Evaluator:
@@ -53,4 +53,8 @@ class Evaluator:
     def generate_report(self):
         for metric in self.metrics:
             print(f"-------- {metric.get_name()} ----------")
-            print(metric.get_stats())
+            print(
+                "\n".join(
+                    f"{metric}: {val}" for metric, val in metric.get_stats().items()
+                )
+            )

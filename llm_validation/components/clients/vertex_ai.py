@@ -40,8 +40,8 @@ class VertexAiClient(Client):
 
         for chunk in stream:
             try:
-                if not chunk.text:
-                    continue
+                if chunk.usage_metadata.prompt_token_count > 0:
+                    self.input_tokens = chunk.usage_metadata.prompt_token_count
                 yield dict(text=chunk.text, raw_response=chunk)
             except:
                 print(
@@ -71,3 +71,7 @@ class VertexAiClient(Client):
                 output_tokens=response.usage_metadata.candidates_token_count,
             ),
         )
+
+    def extract_usage(self, type: str = "input") -> int:
+        if type == "input" and self.input_tokens:
+            return self.input_tokens

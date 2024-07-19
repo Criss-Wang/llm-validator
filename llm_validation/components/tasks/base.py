@@ -8,7 +8,6 @@ from llm_validation.app.configs import TaskConfig
 from llm_validation.components.clients import Client
 from llm_validation.components.prompts import Prompt
 from llm_validation.components.datasets import Dataset
-from llm_validation.components.results import Result
 
 
 class Task:
@@ -61,20 +60,16 @@ class Task:
                     tokens.append(token)
                 end_time = time.time()
                 total_time = end_time - start_time
-                input_usage = 0
-                # handle input_usage that is given at the start of streaming
-                if tokens[0]["text"] == "<Claude_Start>":
-                    input_usage = client.extract_usage("input")
-                    tokens = tokens[1:]
-
-                response = "".join(
+                input_tokens = self._get_input_tokens(client)
+                tokens = [
                     token["text"]
                     for token in tokens
                     if token is not None and token["text"] is not None
-                )
+                ]
+                response = "".join(tokens)
                 token_statistics = {
-                    "input_usage": input_usage,
-                    "output_usage": len(tokens),
+                    "input_tokens": input_tokens,
+                    "output_tokens": len(tokens),
                 }
             else:
                 results = await client.predict(messages)
@@ -99,3 +94,9 @@ class Task:
                 token_statistics=token_statistics,
                 time_statistics=time_statistics,
             )
+
+    def _get_input_tokens(self, client: Client):
+        input_tokens = 0
+        if client.name in ["anthropic", "bedrock", "together", "vertex"]:
+            input_tokens = client.extract_usage("input")
+        return input_tokens

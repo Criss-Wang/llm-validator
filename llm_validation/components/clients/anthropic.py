@@ -24,11 +24,7 @@ class AnthropicClient(Client):
 
         for chunk in stream:
             if chunk.type == "message_start":
-                self.input_usage = chunk.message.usage.input_tokens
-                yield dict(
-                    text="<Claude_Start>",
-                    raw_response=chunk,
-                )
+                self.input_tokens = chunk.message.usage.input_tokens
             elif chunk.type == "content_block_delta":
                 yield dict(
                     text=chunk.delta.text,
@@ -62,6 +58,6 @@ class AnthropicClient(Client):
             usage=dict(response.usage),
         )
 
-    def extract_usage(self, type: str = "input"):
-        if type == "input" and self.input_usage:
-            return self.input_usage
+    def extract_usage(self, type: str = "input") -> int:
+        if type == "input" and self.input_tokens:
+            return self.input_tokens

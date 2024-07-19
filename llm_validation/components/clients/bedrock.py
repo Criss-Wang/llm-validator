@@ -1,6 +1,6 @@
-import os
 import json
 import time
+import logging
 from typing import List, Dict
 
 import boto3
@@ -34,6 +34,8 @@ class BedrockClient(Client):
             )
         for event in response_stream["body"]:
             chunk = json.loads(event["chunk"]["bytes"])
+            if "prompt_token_count" in chunk and chunk["prompt_token_count"]:
+                self.input_tokens = chunk["prompt_token_count"]
             if "generation" in chunk:
                 yield dict(
                     text=chunk["generation"],
@@ -76,3 +78,7 @@ class BedrockClient(Client):
                 output_tokens=response["generation_token_count"],
             ),
         )
+
+    def extract_usage(self, type: str = "input") -> int:
+        if type == "input" and self.input_tokens:
+            return self.input_tokens

@@ -4,29 +4,28 @@ from typing import List
 
 import click
 import mlflow
-import numpy as np
 
 from llm_validation.app.configs import ValidationConfig
-from llm_validation.app.controller import ValidationController
-from llm_validation.components.factories import (
-    init_client, 
-    init_dataset, 
-    init_evaluator, 
-    init_prompt, 
-    init_task
+from llm_validation.app.validation_controller import ValidationController
+from llm_validation.components.factories.client_factory import init_client
+from llm_validation.components.factories.general_factory import (
+    init_dataset,
+    init_evaluator,
+    init_prompt,
+    init_task,
 )
-from llm_validation.utilities import initialize_logging
+from llm_validation.utilities.common_utils import initialize_logging, set_random_state
 from llm_validation.utilities.config_utils import load_validation_config
 
 
 logger = logging.getLogger(__name__)
 
-np.random.seed(42)
 mlflow.set_tracking_uri(uri="http://localhost:5000")
+set_random_state()
 
 
 def setup_mlflow_experiment(project: str, task_name: str, model_name: str) -> List[str]:
-    run_name = f"{model_name}-{datetime.now().strftime("%Y%m%d-%H%M%S")}"
+    run_name = f'{model_name}-{datetime.now().strftime("%Y%m%d-%H%M%S")}'
     experiment_name = f"{project}-{task_name}"
 
     # replace the existing experiment-run with the same name
@@ -41,7 +40,6 @@ def setup_mlflow_experiment(project: str, task_name: str, model_name: str) -> Li
 
 
 def run_validation(config: ValidationConfig):
-    
     client = init_client(config.client_config)
     dataset = init_dataset(config.dataset_config)
     evaluator = init_evaluator(config.evaluator_config)
@@ -50,8 +48,10 @@ def run_validation(config: ValidationConfig):
 
     validation_controller = ValidationController(config.controller_config)
 
-    run_name, experiment_name = setup_mlflow_experiment(config.project, task.name, client.model_name)
-    
+    run_name, experiment_name = setup_mlflow_experiment(
+        config.project, task.name, client.model_name
+    )
+
     with mlflow.start_run(
         run_name=run_name,
         tags={
@@ -60,12 +60,17 @@ def run_validation(config: ValidationConfig):
             "client": client.name,
             "model": client.model_name,
             "prompt": prompt.name,
-            "tenant": prompt.tenant,
         },
     ):
-        inference_results = validation_controller.run_inference(task, dataset, client, prompt)
-        evaluation_results = validation_controller.run_evaluation(evaluator, inference_results)
-        validation_controller.save_results(inference_results, evaluation_results, run_name, experiment_name, config)
+        inference_results = validation_controller.run_inference(
+            task, dataset, client, prompt
+        )
+        evaluation_results = validation_controller.run_evaluation(
+            evaluator, inference_results
+        )
+        validation_controller.save_results(
+            inference_results, evaluation_results, run_name, experiment_name, config
+        )
 
 
 @click.group()

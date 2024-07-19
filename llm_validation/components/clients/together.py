@@ -7,7 +7,7 @@ from llm_validation.components.clients import Client
 from llm_validation.app.configs import ClientConfig
 
 
-class LocalClient(Client):
+class TogetherClient(Client):
     def __init__(self, config: ClientConfig):
         super().__init__(config)
         self.api_key = os.getenv("TOGETHER_API_KEY")
@@ -22,6 +22,8 @@ class LocalClient(Client):
         )
 
         for chunk in stream:
+            if chunk.usage:
+                self.input_tokens = chunk.usage.prompt_tokens
             yield dict(
                 text=chunk.choices[0].delta.content,
                 raw_response=chunk,
@@ -42,3 +44,7 @@ class LocalClient(Client):
                 output_tokens=response.usage.completion_tokens,
             ),
         )
+
+    def extract_usage(self, type: str = "input") -> int:
+        if type == "input" and self.input_tokens:
+            return self.input_tokens

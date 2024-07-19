@@ -35,8 +35,14 @@ class ValidationController:
 
     def run_evaluation(self, evaluator: Evaluator, inference_results: Result) -> Result:
         evaluation_scores = evaluator.evaluate(inference_results)
-        # aggregated_metrics = evaluator.aggregate()
-        aggregated_metrics = {}
+
+        # ensure results saving are not blocked by aggregation logic errors
+        try:
+            aggregated_metrics = evaluator.aggregate()
+        except Exception as e:
+            logger.error(e)
+            aggregated_metrics = {}
+
         return EvaluationResult(
             evaluation_scores=evaluation_scores, aggregated_metrics=aggregated_metrics
         )
@@ -61,6 +67,8 @@ class ValidationController:
 
         # save evalution results
         final_df = pd.concat([results_table, scores_table], axis=1)
+        if not os.path.exists(f"results/{experiment_name}"):
+            os.makedirs(f"results/{experiment_name}/")
         final_df.to_csv(f"results/{experiment_name}/{run_name}.csv")
         mlflow.log_artifact(f"results/{experiment_name}/{run_name}.csv")
 

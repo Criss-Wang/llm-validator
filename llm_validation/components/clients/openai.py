@@ -9,7 +9,7 @@ from llm_validation.app.configs import ClientConfig
 
 class OpenAiClient(Client):
     """
-    Note that anyscale endpoints are similiar to
+    Note that the way we use anyscale endpoints are similiar to openai so we temporarily consider openai
     """
 
     def __init__(self, config: ClientConfig):
@@ -17,7 +17,7 @@ class OpenAiClient(Client):
         self.api_key = os.getenv("OPENAI_API_KEY")
         self.base_url = os.getenv("OPENAI_API_BASE")
         self.model_version = os.getenv("OPENAI_API_VERSION")
-        self.model_id = "GPT4"
+        self.model_name = config.model_name
         self.model_options = config.model_options
 
     async def predict_stream(self, messages: List):
@@ -27,10 +27,11 @@ class OpenAiClient(Client):
             azure_endpoint=self.base_url,
         )
         stream = client.chat.completions.create(
-            model=self.model_id,
+            model=self.model_name,
             messages=messages,
-            stream=True,
             **self.model_options,
+            stream=True,
+            stream_options={"include_usage": True},
         )
         for chunk in stream:
             if not chunk.choices:
@@ -47,7 +48,7 @@ class OpenAiClient(Client):
             azure_endpoint=self.base_url,
         )
         response = client.chat.completions.create(
-            model=self.model_id,
+            model=self.model_name,
             messages=messages,
             **self.model_options,
         )
@@ -64,7 +65,7 @@ class OpenAiClient(Client):
             azure_endpoint=self.base_url,
         )
         response = client.chat.completions.create(
-            model=self.model_id,
+            model=self.model_name,
             messages=messages,
             **self.model_options,
         )

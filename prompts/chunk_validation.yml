@@ -5,6 +5,6 @@
       You must only return "Yes" or "No"
   user:
     value: >
-      The text chunk is: "{chunk}".
-      The user query is: "{query}".
+      The text chunk is: {chunk}.
+      The user query is: {query}.
       The response is:

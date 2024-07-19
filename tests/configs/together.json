@@ -1,0 +1,39 @@
+{
+    "project": "llm-validation",
+    "task_config": {
+        "name": "code-generation"
+    },
+    "client_config": {
+        "name": "together",
+        "type": "research",
+        "model_name": "mistralai/Mistral-7B-Instruct-v0.2"
+    },
+    "prompt_config": {
+        "name": "code-generation-prompt-v1",
+        "path": "prompts/code_generation.yaml",
+        "version": 1
+    },
+    "evaluator_config": {
+        "metrics": [
+            {
+                "type": "accuracy",
+                "aspect": "codegen"
+            },
+            {
+                "type": "latency"
+            },
+            {
+                "type": "cost"
+            }
+        ]
+    },
+    "dataset_config": {
+        "data_path": "datasets/code_generation/test.csv",
+        "label_col": "true_label"
+    },
+    "controller_config": {
+        "save_path": "results",
+        "parallelism": 12,
+        "use_streaming": true
+    }
+}

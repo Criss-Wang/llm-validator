@@ -5,9 +5,7 @@ from pydantic import BaseModel, ConfigDict
 
 
 class ClientType(str, Enum):
-    VLLM = "vllm"
-    OpenAI = "openai"
-    LLMGateway = "llm-gateway"
+    Local = "local"
     ResearchLLM = "research"
 
 
@@ -41,7 +39,6 @@ class EvaluatorConfig(BaseModel):
 
 class PromptConfig(BaseModel):
     name: str
-    tenant: str
     path: str
     version: int
 

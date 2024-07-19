@@ -1,5 +1,5 @@
 from typing import Dict, List
-from collections import defaultdict
+from collections import defaultdict, Counter
 
 import ast
 import json
@@ -74,8 +74,7 @@ class CodeGenAccuracy(AccuracyMetric):
         )
         prompt_config = PromptConfig(
             name="codegen-judge",
-            tenant="10000",
-            path="prompts/judge/prompts.yml",
+            path="prompts/judge.yml",
             version=1,
         )
         self.client = OpenAiClient(client_config)
@@ -101,6 +100,12 @@ class CodeGenAccuracy(AccuracyMetric):
             "code_quality": code_quality,
             "response_quality": response_quality,
         }
+
+    def aggregate(self):
+        code_quality = self.scores["code_quality"]
+        response_quality = self.scores["response_quality"]
+        self.stats.update(dict(Counter(code_quality)))
+        self.stats.update(dict(Counter(response_quality)))
 
 
 # class FunctionCallMetric(AccuracyMetric):
