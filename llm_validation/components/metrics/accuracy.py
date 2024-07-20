@@ -1,10 +1,7 @@
-from typing import Dict, List
 from collections import defaultdict, Counter
 
-import ast
 import json
 from sklearn.metrics import classification_report
-from sentence_transformers import SentenceTransformer, util
 
 from .base import Metric
 from llm_validation.components.results import Result
@@ -14,7 +11,7 @@ from llm_validation.components.prompts import Prompt
 
 
 class AccuracyMetric(Metric):
-    def measure(self, results: Result):
+    def measure(self, results: Result) -> None:
         self.scores = defaultdict(list)
         self.size = len(results)
         self.responses = results.responses
@@ -90,8 +87,8 @@ class CodeGenAccuracy(AccuracyMetric):
             reason = result_content["reason"]
             code_quality = result_content["code_quality"]
             response_quality = result_content["response_quality"]
-        except:
-            print("error")
+        except Exception as e:
+            print(e)
             reason = "error"
             code_quality = "wrong"
             response_quality = "bad"

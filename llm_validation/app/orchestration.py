@@ -6,7 +6,7 @@ import click
 import mlflow
 
 from llm_validation.app.configs import ValidationConfig
-from llm_validation.app.validation_controller import ValidationController
+from llm_validation.app.controller import ValidationController
 from llm_validation.components.factories.client_factory import init_client
 from llm_validation.components.factories.general_factory import (
     init_dataset,
@@ -32,7 +32,8 @@ def setup_mlflow_experiment(project: str, task_name: str, model_name: str) -> Li
     if curr_experiment := mlflow.get_experiment_by_name(experiment_name):
         runs = mlflow.search_runs([curr_experiment.experiment_id])
         if len(runs) > 0:
-            old_runs_ids = runs[runs["tags.mlflow.runName"] == run_name]["run_id"]
+            old_runs_ids = runs[runs["tags.mlflow.runName"]
+                                == run_name]["run_id"]
             for id in old_runs_ids:
                 mlflow.delete_run(id)
     mlflow.set_experiment(experiment_name)
@@ -88,7 +89,8 @@ def run(configs: List[str]):
             config = load_validation_config(path=config_path)
             run_validation(config)
         except Exception:
-            logger.exception(f"Failed running validation with config: {config_path}")
+            logger.exception(
+                f"Failed running validation with config: {config_path}")
 
 
 if __name__ == "__main__":

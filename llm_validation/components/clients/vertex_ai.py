@@ -1,10 +1,9 @@
-import os
 import time
 from typing import List, Dict
 
 import vertexai
-from vertexai.generative_models import GenerativeModel, GenerationConfig
 import vertexai.preview.generative_models as generative_models
+from vertexai.generative_models import GenerativeModel, GenerationConfig
 
 from llm_validation.components.clients import Client
 from llm_validation.app.configs import ClientConfig
@@ -32,20 +31,25 @@ class VertexAiClient(Client):
             system_instruction=messages[0]["content"],
         )
         try:
-            stream = model.generate_content([messages[1]["content"]], stream=True)
-        except:
+            stream = model.generate_content(
+                [messages[1]["content"]], stream=True)
+        except Exception as e:
             # vertex_ai has strict credit usage limit per hour/ per min
+            print(e)
             time.sleep(60)
-            stream = model.generate_content([messages[1]["content"]], stream=True)
+            stream = model.generate_content(
+                [messages[1]["content"]], stream=True)
 
         for chunk in stream:
             try:
                 if chunk.usage_metadata.prompt_token_count > 0:
                     self.input_tokens = chunk.usage_metadata.prompt_token_count
                 yield dict(text=chunk.text, raw_response=chunk)
-            except:
+            except Exception as e:
+                print(e)
                 print(
-                    "*** ValueError: Response has no candidates (and thus no text). The response is likely blocked by the safety filters."
+                    "*** ValueError: Response has no candidates (and thus no text).",
+                    "The response is likely blocked by the safety filters."
                 )
                 yield dict(text="", raw_response=chunk)
                 break
@@ -59,8 +63,9 @@ class VertexAiClient(Client):
         )
         try:
             response = model.generate_content([messages[1]["content"]])
-        except:
+        except Exception as e:
             # vertex_ai has strict credit usage limit per hour/ per min
+            print(e)
             time.sleep(60)
             response = model.generate_content([messages[1]["content"]])
         return dict(

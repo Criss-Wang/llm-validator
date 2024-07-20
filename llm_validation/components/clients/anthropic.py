@@ -37,7 +37,8 @@ class AnthropicClient(Client):
         """
         Message(
             id='msg_01MjXH1yu3f6GAjkjq9V1J8F',
-            content=[TextBlock(text='Here\'s an output treating "this is a variable" as a variable:\n\nthis is a variable', type='text')], model='claude-3-5-sonnet-20240620',
+            content=[TextBlock(text='text_content', type='text')],
+            model='claude-3-5-sonnet-20240620',
             role='assistant',
             stop_reason='end_turn',
             stop_sequence=None,

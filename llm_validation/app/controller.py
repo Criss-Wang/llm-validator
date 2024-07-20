@@ -1,5 +1,7 @@
 import asyncio
+import os
 import json
+import logging
 
 import mlflow
 import pandas as pd
@@ -13,6 +15,8 @@ from llm_validation.components.datasets import Dataset
 from llm_validation.components.results import Result, InferenceResult, EvaluationResult
 from llm_validation.utilities.common_utils import flatten_dict
 
+logger = logging.getLogger(__name__)
+
 
 class ValidationController:
     def __init__(self, config: ControllerConfig):
@@ -25,11 +29,13 @@ class ValidationController:
         self, task: Task, dataset: Dataset, client: Client, prompt: Prompt
     ) -> Result:
         # save prompt info
-        mlflow.log_text(json.dumps(prompt.messages, indent=2), "prompt_template.json")
+        mlflow.log_text(json.dumps(prompt.messages, indent=2),
+                        "prompt_template.json")
 
         # parallelly process task
         results, labels = asyncio.get_event_loop().run_until_complete(
-            task.arun(client, prompt, dataset, self.use_streaming, self.parallelism)
+            task.arun(client, prompt, dataset,
+                      self.use_streaming, self.parallelism)
         )
         return InferenceResult(results, labels)
 

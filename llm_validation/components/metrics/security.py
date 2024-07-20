@@ -1,5 +1,3 @@
-from typing import Dict
-
 from .base import Metric
 from llm_validation.components.results import Result
 
