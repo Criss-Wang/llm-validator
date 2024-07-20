@@ -1,5 +1,7 @@
 import os
 import yaml
+import json
+import time
 from logging import config as logging_config
 from typing import Dict, Any
 
@@ -13,11 +15,10 @@ def initialize_logging():
         logging_config.dictConfig(config_description)
 
 
-def wandb_save_file(data: Any, file_name: str):
-    with open(file_name, "w") as f:
+def wandb_save_file(data: Any, results_path: str, file_name: str):
+    with open(f"{results_path}/{file_name}.json", "w") as f:
         json.dump(data, f, indent=2)
     wandb.save(file_name)
-    os.remove(file_name)
 
 
 def set_random_state():

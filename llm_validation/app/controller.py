@@ -28,8 +28,6 @@ class ValidationController:
     def run_inference(
         self, task: Task, dataset: Dataset, client: Client, prompt: Prompt
     ) -> Result:
-        # save prompt info
-        wandb_save_file(prompt.messages, "prompt_template.json")
 
         # parallelly process task
         results, labels = asyncio.get_event_loop().run_until_complete(
@@ -64,22 +62,21 @@ class ValidationController:
 
         # save evalution results
         final_df = pd.concat([results_table, scores_table], axis=1)
-        if not os.path.exists(f"results/{experiment_name}"):
-            os.makedirs(f"results/{experiment_name}/")
-        final_df.to_csv(f"results/{experiment_name}/{run_name}.csv")
-        wandb.save(f"results/{experiment_name}/{run_name}.csv")
+
+        results_path = f"results/{experiment_name}/"
+        if not os.path.exists(results_path):
+            os.makedirs(results_path)
+        final_df.to_csv(f"{results_path}/{run_name}.csv")
+        wandb.save(f"{results_path}/{run_name}.csv")
 
         # Log aggregated metrics
         wandb.log(flatten_dict(evaluation_results.aggregated_metrics))
 
         # Save and log aggregated metrics as a JSON file
         wandb_save_file(
-            json.dump(evaluation_results.aggregated_metrics, f, indent=2), 
-            "aggregated_metrics.json"
+            evaluation_results.aggregated_metrics,
+            results_path,
+            "aggregated_metrics",
         )
-        with open("aggregated_metrics.json", "w") as f:
-            
-        wandb.save("aggregated_metrics.json")
-
         # Save and log configuration as a JSON file
-        wandb_save_file(config.dict(),"config.json")
+        wandb_save_file(config.dict(), results_path, "config")

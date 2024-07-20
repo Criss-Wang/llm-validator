@@ -68,7 +68,7 @@ def run(configs: List[str]):
         click.echo("")
         try:
             click.echo(f"Running validation with config: {config_path}")
-            config = load_validation_config(path=config_path)
+            config = load_validation_config(filename=config_path)
             run_validation(config)
         except Exception:
             logger.exception(f"Failed running validation with config: {config_path}")

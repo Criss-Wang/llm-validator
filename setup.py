@@ -8,7 +8,7 @@ setup(
     packages=find_packages(exclude=["tests"]),
     entry_points={
         "console_scripts": [
-            "llm-validator = llm_validation.__main__:cli",
+            "llm-validator = llm_validation.app.orchestration:cli",
         ]
     },
 )
