@@ -1,5 +1,5 @@
-from llm_benchmark.app.configs import (
-    BenchmarkConfig,
+from llm_validation.app.configs import (
+    ValidationConfig,
     ControllerConfig,
     TaskConfig,
     PromptConfig,
@@ -8,17 +8,17 @@ from llm_benchmark.app.configs import (
     EvaluatorConfig,
     MetricConfig,
 )
-from llm_benchmark.app.benchmark_controller import BenchmarkController
-from llm_benchmark.components.clients import AnthropicClient
-from llm_benchmark.components.tasks import Task
-from llm_benchmark.components.prompts import Prompt
-from llm_benchmark.components.metrics import Metric, CostMetric, LatencyMetric
-from llm_benchmark.components.evaluators import Evaluator
-from llm_benchmark.components.datasets import Dataset
-from llm_benchmark.components.results import Result
+from llm_validation.app.validation_controller import ValidationController
+from llm_validation.components.clients import AnthropicClient
+from llm_validation.components.tasks import Task
+from llm_validation.components.prompts import Prompt
+from llm_validation.components.metrics import Metric, CostMetric, LatencyMetric
+from llm_validation.components.evaluators import Evaluator
+from llm_validation.components.datasets import Dataset
+from llm_validation.components.results import Result
 
 controller_config = ControllerConfig(use_streaming=True, save_path="results")
-controller = BenchmarkController(controller_config)
+controller = ValidationController(controller_config)
 
 task_config = TaskConfig(name="temp")
 client_config = ClientConfig(
@@ -38,7 +38,7 @@ metrics = [
 
 evaluator_config = EvaluatorConfig(metrics=metrics)
 
-config = BenchmarkConfig(
+config = ValidationConfig(
     project="test",
     task_config=task_config,
     client_config=client_config,

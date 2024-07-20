@@ -1,14 +1,23 @@
+import os
 import yaml
 from logging import config as logging_config
-from typing import Dict
+from typing import Dict, Any
 
 import numpy as np
+import wandb
 
 
 def initialize_logging():
     with open("logging_config.yaml") as f:
         config_description = yaml.safe_load(f)
         logging_config.dictConfig(config_description)
+
+
+def wandb_save_file(data: Any, file_name: str):
+    with open(file_name, "w") as f:
+        json.dump(data, f, indent=2)
+    wandb.save(file_name)
+    os.remove(file_name)
 
 
 def set_random_state():

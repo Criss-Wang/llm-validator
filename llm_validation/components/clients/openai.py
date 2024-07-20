@@ -15,8 +15,6 @@ class OpenAiClient(Client):
     def __init__(self, config: ClientConfig):
         super().__init__(config)
         self.api_key = os.getenv("OPENAI_API_KEY")
-        self.model_name = config.model_name
-        self.model_options = config.model_options
 
     async def predict_stream(self, messages: List):
         client = openai.OpenAI(api_key=self.api_key)
@@ -28,8 +26,8 @@ class OpenAiClient(Client):
             stream_options={"include_usage": True},
         )
         for chunk in stream:
-            import pdb
-            pdb.set_trace()
+            if chunk.usage:
+                self.input_tokens = chunk.usage.prompt_tokens
             if not chunk.choices:
                 continue
             yield dict(
@@ -44,8 +42,7 @@ class OpenAiClient(Client):
             messages=messages,
             **self.model_options,
         )
-        import pdb
-        pdb.set_trace()
+
         return dict(
             text=response.choices[0].message.content,
             raw_response=response,
@@ -65,3 +62,7 @@ class OpenAiClient(Client):
             raw_response=response,
             usage=dict(input_tokens=19, output_tokens=23),
         )
+
+    def extract_usage(self, type: str = "input") -> int:
+        if type == "input" and self.input_tokens:
+            return self.input_tokens

@@ -3,7 +3,7 @@ from datetime import datetime
 from typing import List
 
 import click
-import mlflow
+import wandb
 
 from llm_validation.app.configs import ValidationConfig
 from llm_validation.app.controller import ValidationController
@@ -20,23 +20,15 @@ from llm_validation.utilities.config_utils import load_validation_config
 
 logger = logging.getLogger(__name__)
 
-mlflow.set_tracking_uri(uri="http://localhost:5000")
 set_random_state()
 
 
-def setup_mlflow_experiment(project: str, task_name: str, model_name: str) -> List[str]:
+def setup_wandb_experiment(project: str, task_name: str, model_name: str) -> List[str]:
     run_name = f'{model_name}-{datetime.now().strftime("%Y%m%d-%H%M%S")}'
     experiment_name = f"{project}-{task_name}"
 
-    # replace the existing experiment-run with the same name
-    if curr_experiment := mlflow.get_experiment_by_name(experiment_name):
-        runs = mlflow.search_runs([curr_experiment.experiment_id])
-        if len(runs) > 0:
-            old_runs_ids = runs[runs["tags.mlflow.runName"]
-                                == run_name]["run_id"]
-            for id in old_runs_ids:
-                mlflow.delete_run(id)
-    mlflow.set_experiment(experiment_name)
+    # Initialize W&B
+    wandb.init(project=project, name=run_name)
     return run_name, experiment_name
 
 
@@ -49,29 +41,19 @@ def run_validation(config: ValidationConfig):
 
     validation_controller = ValidationController(config.controller_config)
 
-    run_name, experiment_name = setup_mlflow_experiment(
+    run_name, experiment_name = setup_wandb_experiment(
         config.project, task.name, client.model_name
     )
 
-    with mlflow.start_run(
-        run_name=run_name,
-        tags={
-            "project": config.project,
-            "task": task.name,
-            "client": client.name,
-            "model": client.model_name,
-            "prompt": prompt.name,
-        },
-    ):
-        inference_results = validation_controller.run_inference(
-            task, dataset, client, prompt
-        )
-        evaluation_results = validation_controller.run_evaluation(
-            evaluator, inference_results
-        )
-        validation_controller.save_results(
-            inference_results, evaluation_results, run_name, experiment_name, config
-        )
+    inference_results = validation_controller.run_inference(
+        task, dataset, client, prompt
+    )
+    evaluation_results = validation_controller.run_evaluation(
+        evaluator, inference_results
+    )
+    validation_controller.save_results(
+        inference_results, evaluation_results, run_name, experiment_name, config
+    )
 
 
 @click.group()
@@ -89,8 +71,7 @@ def run(configs: List[str]):
             config = load_validation_config(path=config_path)
             run_validation(config)
         except Exception:
-            logger.exception(
-                f"Failed running validation with config: {config_path}")
+            logger.exception(f"Failed running validation with config: {config_path}")
 
 
 if __name__ == "__main__":

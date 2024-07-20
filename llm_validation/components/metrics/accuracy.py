@@ -65,13 +65,13 @@ class CodeGenAccuracy(AccuracyMetric):
         client_config = ClientConfig(
             name="openai",
             type="research",
-            model_name="GPT4",
+            model_name="gpt-4o-mini",
             base_url="",
             model_options={"temperature": 0, "top_p": 1, "max_tokens": 1024},
         )
         prompt_config = PromptConfig(
-            name="codegen-judge",
-            path="prompts/judge.yml",
+            name="code-generation-judge",
+            path="prompts/judge.yaml",
             version=1,
         )
         self.client = OpenAiClient(client_config)

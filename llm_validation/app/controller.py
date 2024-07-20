@@ -3,8 +3,8 @@ import os
 import json
 import logging
 
-import mlflow
 import pandas as pd
+import wandb
 
 from llm_validation.app.configs import ValidationConfig, ControllerConfig
 from llm_validation.components.clients import Client
@@ -13,7 +13,7 @@ from llm_validation.components.prompts import Prompt
 from llm_validation.components.evaluators import Evaluator
 from llm_validation.components.datasets import Dataset
 from llm_validation.components.results import Result, InferenceResult, EvaluationResult
-from llm_validation.utilities.common_utils import flatten_dict
+from llm_validation.utilities.common_utils import flatten_dict, wandb_save_file
 
 logger = logging.getLogger(__name__)
 
@@ -29,13 +29,11 @@ class ValidationController:
         self, task: Task, dataset: Dataset, client: Client, prompt: Prompt
     ) -> Result:
         # save prompt info
-        mlflow.log_text(json.dumps(prompt.messages, indent=2),
-                        "prompt_template.json")
+        wandb_save_file(prompt.messages, "prompt_template.json")
 
         # parallelly process task
         results, labels = asyncio.get_event_loop().run_until_complete(
-            task.arun(client, prompt, dataset,
-                      self.use_streaming, self.parallelism)
+            task.arun(client, prompt, dataset, self.use_streaming, self.parallelism)
         )
         return InferenceResult(results, labels)
 
@@ -61,13 +59,6 @@ class ValidationController:
         run_name: str,
         config: ValidationConfig,
     ):
-        """
-        Things to save to mlflow and local:
-        - metric scores
-        - full stats for each request
-        - list of good cases & bad cases
-        -
-        """
         results_table = inference_results.to_df()
         scores_table = evaluation_results.to_df()
 
@@ -76,12 +67,19 @@ class ValidationController:
         if not os.path.exists(f"results/{experiment_name}"):
             os.makedirs(f"results/{experiment_name}/")
         final_df.to_csv(f"results/{experiment_name}/{run_name}.csv")
-        mlflow.log_artifact(f"results/{experiment_name}/{run_name}.csv")
+        wandb.save(f"results/{experiment_name}/{run_name}.csv")
 
-        # save aggregated metrics
-        mlflow.log_metrics(flatten_dict(evaluation_results.aggregated_metrics))
-        mlflow.log_text(
-            json.dumps(evaluation_results.aggregated_metrics, indent=2),
-            "aggregated_metrics.json",
+        # Log aggregated metrics
+        wandb.log(flatten_dict(evaluation_results.aggregated_metrics))
+
+        # Save and log aggregated metrics as a JSON file
+        wandb_save_file(
+            json.dump(evaluation_results.aggregated_metrics, f, indent=2), 
+            "aggregated_metrics.json"
         )
-        mlflow.log_text(json.dumps(config.dict(), indent=2), "config.json")
+        with open("aggregated_metrics.json", "w") as f:
+            
+        wandb.save("aggregated_metrics.json")
+
+        # Save and log configuration as a JSON file
+        wandb_save_file(config.dict(),"config.json")

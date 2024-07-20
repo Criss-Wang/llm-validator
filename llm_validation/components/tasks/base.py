@@ -96,7 +96,10 @@ class Task:
             )
 
     def _get_input_tokens(self, client: Client):
-        input_tokens = 0
-        if client.name in ["anthropic", "bedrock", "together", "vertex"]:
+        try:
             input_tokens = client.extract_usage("input")
+        except Exception as e:
+            print(e)
+            input_tokens = 0
+
         return input_tokens

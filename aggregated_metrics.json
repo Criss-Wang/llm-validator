@@ -1,0 +1,23 @@
+{
+  "Accuracy": {
+    "incomplete": 2,
+    "fair": 2
+  },
+  "Latency": {
+    "average_time_to_first_token": 0.6145452260971069,
+    "max_time_to_first_token": 0.7275872230529785,
+    "min_time_to_first_token": 0.5015032291412354,
+    "average_time_per_request": 1.937211275100708,
+    "average_tokens_per_second": 48.87970523614019,
+    "max_tokens_per_second": 56.36784897091705,
+    "min_tokens_per_second": 41.39156150136333
+  },
+  "Cost": {
+    "average_input_tokens": 214.0,
+    "min_input_tokens": 194,
+    "max_input_tokens": 234,
+    "average_output_tokens": 94.0,
+    "min_output_tokens": 84,
+    "max_output_tokens": 104
+  }
+}

@@ -137,6 +137,7 @@ mlruns
 mlartifacts
 
 
-results/*.csv
+results/*
 *.xlsx
 .flake8
+wandb/*

@@ -1,5 +1,5 @@
-from llm_benchmark.app.benchmark_orchestration import run_benchmark
-from llm_benchmark.utilities.config_utils import load_benchmark_config
+from llm_validation.app.orchestration import run_validation
+from llm_validation.utilities.config_utils import load_validation_config
 
-config = load_benchmark_config(filename="tests/configs/openai.json")
-run_benchmark(config)
+config = load_validation_config(filename="tests/configs/openai.json")
+run_validation(config)
