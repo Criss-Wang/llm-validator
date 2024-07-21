@@ -4,9 +4,7 @@
 
 ### Prerequisites
 
-In order to run this project you will need python version 3.9/3.10/3.11 installed on your machine.
-
-The project uses packages from the JFrog repository. To use the packages, you need to export the following environment variable:
+In order to run this project you will need python version `3.9`/`3.10`/`3.11` installed on your machine.
 
 ### Setup environment
 
