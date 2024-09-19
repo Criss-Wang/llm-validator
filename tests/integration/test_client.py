@@ -1,12 +1,11 @@
-import subprocess
 import os
 
 
 # Run a command
 for client in [
     # "anthropic",
-    # "openai",
-    "together",
+    "openai",
+    # "together",
     # "vertexai",
     # "local_phi3",
 ]:
