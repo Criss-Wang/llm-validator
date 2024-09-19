@@ -1,3 +1,4 @@
+import os
 import time
 from typing import List, Dict
 
@@ -20,8 +21,9 @@ class VertexAiClient(Client):
             generative_models.HarmCategory.HARM_CATEGORY_SEXUALLY_EXPLICIT: generative_models.HarmBlockThreshold.BLOCK_NONE,
             generative_models.HarmCategory.HARM_CATEGORY_HARASSMENT: generative_models.HarmBlockThreshold.BLOCK_NONE,
         }
-
-        vertexai.init(project="aisera-gemini", location="us-central1")
+        project = os.getenv("VERTEX_AI_GCP_PROJECT")
+        location = os.getenv("VERTEX_AI_GCP_LOCATION")
+        vertexai.init(project=project, location=location)
 
     async def predict_stream(self, messages: List):
         model = GenerativeModel(
@@ -31,14 +33,12 @@ class VertexAiClient(Client):
             system_instruction=messages[0]["content"],
         )
         try:
-            stream = model.generate_content(
-                [messages[1]["content"]], stream=True)
+            stream = model.generate_content([messages[1]["content"]], stream=True)
         except Exception as e:
             # vertex_ai has strict credit usage limit per hour/ per min
             print(e)
             time.sleep(60)
-            stream = model.generate_content(
-                [messages[1]["content"]], stream=True)
+            stream = model.generate_content([messages[1]["content"]], stream=True)
 
         for chunk in stream:
             try:
@@ -49,7 +49,7 @@ class VertexAiClient(Client):
                 print(e)
                 print(
                     "*** ValueError: Response has no candidates (and thus no text).",
-                    "The response is likely blocked by the safety filters."
+                    "The response is likely blocked by the safety filters.",
                 )
                 yield dict(text="", raw_response=chunk)
                 break

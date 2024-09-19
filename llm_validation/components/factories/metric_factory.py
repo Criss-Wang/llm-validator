@@ -1,16 +1,20 @@
 from llm_validation.app.configs import MetricConfig
-from llm_validation.components.metrics import (
-    Metric,
-    CostMetric,
-    LatencyMetric,
-    AccuracyMetric,
-    SecurityMetric,
-    StabilityMetric,
-)
+from llm_validation.components.metrics import Metric
 from llm_validation.components.metrics.accuracy import (
     ClassificationAccuracy,
-    CodeGenAccuracy,
+    CodeGenerationAccuracy,
+    CodeExplanationAccuracy,
 )
+from llm_validation.components.metrics.cost import CostMetric
+from llm_validation.components.metrics.latency import LatencyMetric
+from llm_validation.components.metrics.security import SecurityMetric
+from llm_validation.components.metrics.stability import StabilityMetric
+
+ACCURACY_METRIC_MAPPING = {
+    "classification-all": ClassificationAccuracy,
+    "code-generation": CodeGenerationAccuracy,
+    "code-explanation": CodeExplanationAccuracy,
+}
 
 
 def init_metric(config: MetricConfig) -> Metric:
@@ -19,17 +23,10 @@ def init_metric(config: MetricConfig) -> Metric:
     elif config.type == "latency":
         return LatencyMetric(config)
     elif config.type == "accuracy":
-        return init_accuracy_metric(config)
+        return ACCURACY_METRIC_MAPPING[config.aspect](config)
     elif config.type == "security":
         return SecurityMetric(config)
     elif config.type == "stability":
         return StabilityMetric(config)
     else:
         raise ValueError(f"metric type undefined: {config.type}")
-
-
-def init_accuracy_metric(config: MetricConfig) -> AccuracyMetric:
-    if config.aspect == "classification":
-        return ClassificationAccuracy(config)
-    elif config.aspect == "codegen":
-        return CodeGenAccuracy(config)

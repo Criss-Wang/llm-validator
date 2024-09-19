@@ -11,24 +11,26 @@ from llm_validation.components.clients import (
 
 
 def init_client(config: ClientConfig) -> Client:
-    if config.type == ClientType.Local:
+    if config.client_type == ClientType.Local:
         return LocalClient(config)
-    elif config.type == ClientType.ResearchLLM:
-        return init_research_client(config)
+    elif config.client_type == ClientType.ThirdPartyLLM:
+        return init_api_client(config)
     else:
-        raise ValueError(f"Client type not supported: {config.type}")
+        raise ValueError(f"Client type not supported: {config.client_type}")
 
 
-def init_research_client(config: ClientConfig) -> Client:
-    if config.name == "anthropic":
+def init_api_client(config: ClientConfig) -> Client:
+    if config.client_name == "anthropic":
         return AnthropicClient(config)
-    elif config.name == "bedrock":
+    elif config.client_name == "bedrock":
         return BedrockClient(config)
-    elif config.name == "openai":
+    elif config.client_name == "openai":
         return OpenAiClient(config)
-    elif config.name == "together":
+    elif config.client_name == "together":
         return TogetherClient(config)
-    elif config.name == "vertex":
+    elif config.client_name == "vertex":
         return VertexAiClient(config)
     else:
-        raise ValueError(f"Research client type not supported: {config.name}")
+        raise ValueError(
+            f"Third party API client type not supported: {config.client_name}"
+        )

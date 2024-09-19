@@ -13,7 +13,6 @@ build: install setup test
 setup:
 	export $(grep -v '^#' .env | xargs -0)
 
-
 test:
 	echo "=== Run tests ==="
 	if ! command -v pytest &> /dev/null; then \

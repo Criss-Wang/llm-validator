@@ -1,4 +1,6 @@
-from .base import Metric
+from typing import Dict, List
+
+from ..base import Metric
 from llm_validation.components.results import Result
 
 

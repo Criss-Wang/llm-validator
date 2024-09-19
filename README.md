@@ -80,3 +80,8 @@ You can introduce additional metrics by implementing a `Metric` or inheriting fr
 ## Tutorials
 - [Model Validation Blog](https://criss-wang.com/post/software/model-iteration-research-validation/)
 
+
+## Local model using `Ollama`
+- First, install [`ollama`]()
+- Next run your model via `ollama run phi3:medium-128k`
+- 

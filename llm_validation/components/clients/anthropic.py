@@ -47,6 +47,7 @@ class AnthropicClient(Client):
         )
         """
         client = anthropic.Anthropic(api_key=self.api_key)
+
         response = client.messages.create(
             model=self.model_name,
             system=messages[0]["content"],

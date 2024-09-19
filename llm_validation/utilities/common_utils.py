@@ -1,12 +1,15 @@
-import os
+import re
 import yaml
 import json
-import time
 from logging import config as logging_config
 from typing import Dict, Any
 
 import numpy as np
 import wandb
+
+
+def set_random_state():
+    np.random.seed(42)
 
 
 def initialize_logging():
@@ -16,13 +19,28 @@ def initialize_logging():
 
 
 def wandb_save_file(data: Any, results_path: str, file_name: str):
-    with open(f"{results_path}/{file_name}.json", "w") as f:
+    with open(f"{results_path}/{file_name}.json", "w+") as f:
         json.dump(data, f, indent=2)
     wandb.save(file_name)
 
 
-def set_random_state():
-    np.random.seed(42)
+def parse_score_content(content: str) -> Dict:
+    content = content.strip()
+    pattern = r"<score>(.*?)</score>"
+    match = re.search(pattern, content)
+    if match:
+        score = int(match.group(1))
+    else:
+        score = 0
+
+    pattern = r"<reason>(.*?)</reason>"
+    match = re.search(pattern, content)
+    if match:
+        reason = match.group(1)
+    else:
+        reason = "parsing error, check <reason> tag"
+
+    return {"reason": reason, "score": score}
 
 
 def flatten_dict(d: Dict, parent_key: str = "", sep: str = "_") -> Dict:
