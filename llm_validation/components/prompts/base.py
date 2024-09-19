@@ -9,6 +9,7 @@ from llm_validation.utilities.prompt_utils import transform_prompt
 class Prompt:
     def __init__(self, config: PromptConfig):
         self.name = config.name
+        self.tenant = config.tenant
         self.messages = self.load_prompt(config)
 
     def load_prompt(self, config: PromptConfig):

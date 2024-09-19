@@ -6,8 +6,8 @@ from llm_validation.app.configs import ClientConfig
 
 class Client(ABC):
     def __init__(self, config: ClientConfig):
-        self.name = config.name
-        self.base_url = config.base_url
+        self.name = config.client_name
+        self.base_url = config.model_base_url
         self.model_name = config.model_name
         self.model_options = config.model_options
 

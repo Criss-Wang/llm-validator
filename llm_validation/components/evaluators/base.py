@@ -3,6 +3,7 @@ from typing import List, Dict
 from llm_validation.app.configs import EvaluatorConfig
 from llm_validation.components.results import Result
 from llm_validation.components.factories.metric_factory import init_metric
+from llm_validation.utilities.common_utils import flatten_dict
 
 
 class Evaluator:
@@ -55,6 +56,7 @@ class Evaluator:
             print(f"-------- {metric.get_name()} ----------")
             print(
                 "\n".join(
-                    f"{metric}: {val}" for metric, val in metric.get_stats().items()
+                    f"{metric}: {val}"
+                    for metric, val in flatten_dict(metric.get_stats()).items()
                 )
             )

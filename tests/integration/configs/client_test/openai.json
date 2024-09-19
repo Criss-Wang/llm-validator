@@ -1,0 +1,48 @@
+{
+    "project": "integration-test",
+    "task_config": {
+        "name": "classification"
+    },
+    "client_config": {
+        "client_name": "openai",
+        "client_type": "third_party_llm",
+        "model_name": "GPT4",
+        "model_type": "gpt-4",
+        "model_options": {
+            "temperature": 0,
+            "max_tokens": 1024,
+            "top_p": 1
+        }
+    },
+    "prompt_config": {
+        "name": "test-classification",
+        "tenant": "nns",
+        "path": "tests/integration/prompts/classification.yaml",
+        "version": 1
+    },
+    "evaluator_config": {
+        "metrics": [
+            {
+                "type": "accuracy",
+                "aspect": "classification-all"
+            },
+            {
+                "type": "latency"
+            },
+            {
+                "type": "cost"
+            }
+        ]
+    },
+    "dataset_config": {
+        "data_path": "tests/integration/datasets/test_classification.csv",
+        "label_col": "true_label",
+        "sanity_test": true
+    },
+    "controller_config": {
+        "save_path": "results/tests",
+        "parallelism": 12,
+        "use_streaming": false,
+        "save_inference": true
+    }
+}

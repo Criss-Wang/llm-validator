@@ -1,6 +1,7 @@
 import logging
+from typing import Dict, List
 
-from .base import Metric
+from ..base import Metric
 from llm_validation.components.results import Result
 
 logger = logging.getLogger(__name__)
