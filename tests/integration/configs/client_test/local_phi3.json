@@ -17,8 +17,7 @@
     },
     "prompt_config": {
         "name": "test-classification",
-        "tenant": "nns",
-        "path": "tests/integration/prompts/client_test/classification.yaml",
+        "path": "prompts/classification.yaml",
         "version": 1
     },
     "evaluator_config": {
