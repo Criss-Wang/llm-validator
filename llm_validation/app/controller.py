@@ -58,7 +58,6 @@ class ValidationController:
 
     def run_evaluation(self, evaluator: Evaluator, inference_results: Result) -> Result:
         evaluation_scores = evaluator.evaluate(inference_results)
-
         # ensure results saving are not blocked by aggregation logic errors
         try:
             aggregated_metrics = evaluator.aggregate()

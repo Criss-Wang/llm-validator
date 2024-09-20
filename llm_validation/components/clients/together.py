@@ -45,6 +45,22 @@ class TogetherClient(Client):
             ),
         )
 
+    def sync_predict(self, messages: List) -> Dict:
+        client = Together(api_key=self.api_key)
+        response = client.chat.completions.create(
+            model=self.model_name,
+            messages=messages,
+            **self.model_options,
+        )
+        return dict(
+            text=response.choices[0].message.content,
+            raw_response=response,
+            usage=dict(
+                input_tokens=response.usage.prompt_tokens,
+                output_tokens=response.usage.completion_tokens,
+            ),
+        )
+
     def extract_usage(self, type: str = "input") -> int:
         if type == "input" and self.input_tokens:
             return self.input_tokens

@@ -16,8 +16,7 @@
   },
   "prompt_config": {
     "name": "test-classification",
-    "tenant": "nns",
-    "path": "tests/integration/prompts/classification.yaml",
+    "path": "tests/integration/prompts/client_test/classification.yaml",
     "version": 1
   },
   "evaluator_config": {
@@ -35,7 +34,7 @@
     ]
   },
   "dataset_config": {
-    "data_path": "tests/integration/datasets/test_classification.csv",
+    "data_path": "tests/integration/datasets/client_test/test_classification.csv",
     "label_col": "true_label",
     "sanity_test": true
   },

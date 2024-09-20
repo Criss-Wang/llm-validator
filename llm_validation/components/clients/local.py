@@ -52,3 +52,6 @@ class LocalClient(Client):
                     output_tokens=response["eval_count"],
                 ),
             )
+
+    def sync_predict(self, messages: List):
+        raise NotImplementedError

@@ -4,6 +4,9 @@ from llm_validation.components.metrics.accuracy import (
     ClassificationAccuracy,
     CodeGenerationAccuracy,
     CodeExplanationAccuracy,
+    QuestionAnsweringAccuracy,
+    SummarizationAccuracy,
+    FunctionCallingAccuracy,
 )
 from llm_validation.components.metrics.cost import CostMetric
 from llm_validation.components.metrics.latency import LatencyMetric
@@ -14,6 +17,9 @@ ACCURACY_METRIC_MAPPING = {
     "classification-all": ClassificationAccuracy,
     "code-generation": CodeGenerationAccuracy,
     "code-explanation": CodeExplanationAccuracy,
+    "qa": QuestionAnsweringAccuracy,
+    "summarization": SummarizationAccuracy,
+    "function-calling": FunctionCallingAccuracy,
 }
 
 

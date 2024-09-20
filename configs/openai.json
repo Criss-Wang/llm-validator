@@ -1,13 +1,13 @@
 {
   "project": "integration-test",
   "task_config": {
-    "name": "function_calling"
+    "name": "classification"
   },
   "client_config": {
-    "client_name": "anthropic",
+    "client_name": "openai",
     "client_type": "third_party_llm",
-    "model_name": "claude-3-5-sonnet-20240620",
-    "model_type": "claude-3.5",
+    "model_name": "gpt-4o-mini",
+    "model_type": "gpt-4",
     "model_options": {
       "temperature": 0,
       "max_tokens": 1024,
@@ -15,8 +15,8 @@
     }
   },
   "prompt_config": {
-    "name": "test-function_calling",
-    "path": "tests/integration/prompts/function_calling.yaml",
+    "name": "classification",
+    "path": "prompts/classification.yaml",
     "version": 1
   },
   "evaluator_config": {
@@ -34,7 +34,7 @@
     ]
   },
   "dataset_config": {
-    "data_path": "tests/integration/datasets/test_function_calling.csv",
+    "data_path": "datasets/classification.csv",
     "label_col": "true_label",
     "sanity_test": true
   },

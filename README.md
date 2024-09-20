@@ -1,5 +1,7 @@
 # LLM Validator
 
+A template for LLM benchmarking with custom model/prompt/datasets.
+
 ## Setup Guide
 
 ### Prerequisites
@@ -63,7 +65,7 @@ to export the environment variables.
       user prompt content here
 ```
 2. Import the validation dataset you'd like to use into `datasets` folder
-3. Create a config file under `configs` folder. Refer to `configs/code_generation/openai.json` for how to structure your configurations in json format.
+3. Create a config file under `configs` folder. Refer to `configs/openai.json` for how to structure your configurations in json format.
 
 
 ### Advanced usage
@@ -73,15 +75,8 @@ You can introduce additional client/api providers, or even local endpoints by im
 
 **Custom Metrics**
 
-You can introduce additional metrics by implementing a `Metric` or inheriting from one of the 5 domains (Cost, Latency, Accuracy, Security, Stability) under `llm_validation.component`.
-
+You can introduce additional metrics by implementing a `Metric` from one of the 5 domains (Cost, Latency, Accuracy, Security, Stability) under `llm_validation.component`.
 
 
 ## Tutorials
 - [Model Validation Blog](https://criss-wang.com/post/software/model-iteration-research-validation/)
-
-
-## Local model using `Ollama`
-- First, install [`ollama`]()
-- Next run your model via `ollama run phi3:medium-128k`
-- 

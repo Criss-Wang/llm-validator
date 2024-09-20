@@ -1,6 +1,6 @@
 # For traceability we use DB backreference
 # name: <cluster>-<tenant>-<table name>-<column id>
-- name: code-explain
+- name: test-code_explanation
   system:
     value: >
       You are an expert coder. Given a code snippet, explain it in a few sentences. Be succinct and precise. Extract the main points that describe the code's functionality.

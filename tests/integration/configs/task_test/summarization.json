@@ -1,0 +1,58 @@
+{
+  "project": "integration-test",
+  "task_config": {
+    "name": "summarization"
+  },
+  "client_config": {
+    "client_name": "anthropic",
+    "client_type": "third_party_llm",
+    "model_name": "claude-3-5-sonnet-20240620",
+    "model_type": "claude-3.5",
+    "model_options": {
+      "temperature": 0,
+      "max_tokens": 1024,
+      "top_p": 1
+    }
+  },
+  "prompt_config": {
+    "name": "test-summarization",
+    "path": "tests/integration/prompts/task_test/summarization.yaml",
+    "version": 1
+  },
+  "evaluator_config": {
+    "metrics": [
+      {
+        "type": "accuracy",
+        "aspect": "summarization",
+        "kwargs": {
+          "client_name": "anthropic",
+          "client_type": "third_party_llm",
+          "model_name": "claude-3-5-sonnet-20240620",
+          "model_type": "claude-3.5-sonnet",
+          "model_options": {
+            "temperature": 0,
+            "top_p": 1,
+            "max_tokens": 4096
+          },
+          "prompt_path": "tests/integration/prompts/task_test/summarization.yaml",
+          "accuracy_prompt_name": "accuracy-judge",
+          "accuracy_prompt_verions": 1,
+          "adherence_prompt_name": "adherence-judge",
+          "adherence_prompt_verions": 1,
+          "quality_prompt_name": "quality-judge",
+          "quality_prompt_verions": 1
+        }
+      }
+    ]
+  },
+  "dataset_config": {
+    "data_path": "tests/integration/datasets/task_test/medical_summarization.csv",
+    "sanity_test": true
+  },
+  "controller_config": {
+    "save_path": "results/tests",
+    "parallelism": 12,
+    "use_streaming": false,
+    "save_inference": true
+  }
+}

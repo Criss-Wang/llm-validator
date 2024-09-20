@@ -1,0 +1,24 @@
+- name: test-qa
+  system:
+    value: >
+      Given a context, provide an answer to the question asked.
+  user:
+    value: >
+      The context is: {context}
+      The question is: {question}
+      The answer to the question is:
+
+- name: qa-judge
+  system:
+    value: >
+      Please act as an impartial judge and evaluate the quality of the answer provided by an AI assistant. Assesses how well the answer meets the user’s specific question and resolves their issue mentioned in the question based on the context. Assesses the accuracy, relevance, and completeness of the response to determine if it provides a viable solution. An acceptable answer is one that users view as a suitable resolution, enabling them to proceed without needing further assistance. Verify that there is no misleading or distortion of information. Provide a short explanation (less than 100 words) in the <reason> tag. Finally, give a score between 0 and 10, with 0 meaning the answer is not at all acceptable, and 10 meaning the explanation is totally acceptable. Put the score in the <score> tag.
+  user:
+    value: >
+      The context is:
+      {context}
+      The question is:
+      {question}
+      The AI assistant's answer is:
+      {answer}
+      
+      The reason and the score are:

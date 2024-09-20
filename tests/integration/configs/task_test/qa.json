@@ -16,26 +16,34 @@
   },
   "prompt_config": {
     "name": "test-qa",
-    "path": "tests/integration/prompts/qa.yaml",
+    "path": "tests/integration/prompts/task_test/qa.yaml",
     "version": 1
   },
   "evaluator_config": {
     "metrics": [
       {
         "type": "accuracy",
-        "aspect": "classification-all"
-      },
-      {
-        "type": "latency"
-      },
-      {
-        "type": "cost"
+        "aspect": "qa",
+        "kwargs": {
+          "client_name": "anthropic",
+          "client_type": "third_party_llm",
+          "model_name": "claude-3-5-sonnet-20240620",
+          "model_type": "claude-3.5-sonnet",
+          "model_options": {
+            "temperature": 0,
+            "top_p": 1,
+            "max_tokens": 4096
+          },
+          "prompt_name": "qa-judge",
+          "prompt_path": "tests/integration/prompts/task_test/qa.yaml",
+          "prompt_verions": 1
+        }
       }
     ]
   },
   "dataset_config": {
-    "data_path": "tests/integration/datasets/test_qa.csv",
-    "label_col": "true_label",
+    "data_path": "tests/integration/datasets/task_test/qa.csv",
+    "label_col": "reference_answer",
     "sanity_test": true
   },
   "controller_config": {

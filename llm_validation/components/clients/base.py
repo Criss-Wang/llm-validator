@@ -18,3 +18,7 @@ class Client(ABC):
     @abstractmethod
     async def predict(self, messages: List):
         pass
+
+    @abstractmethod
+    def sync_predict(self, messages: List):
+        pass

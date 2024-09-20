@@ -1,30 +1,30 @@
 {
-    "project": "code-copilot",
+    "project": "integration-test",
     "task_config": {
-        "name": "code-explanation"
+        "name": "classification"
     },
     "client_config": {
-        "client_name": "anyscale",
-        "client_type": "third_party_llm",
-        "model_name": "meta-llama/Meta-Llama-3-70B-Instruct",
-        "model_type": "llama-3-70b",
+        "client_name": "local",
+        "client_type": "local",
+        "model_base_url": "http://localhost:11434/api/chat",
+        "model_name": "phi3:medium-128k",
+        "model_type": "phi-3-medium",
         "model_options": {
             "temperature": 0,
-            "top_p": 1,
-            "max_tokens": 8192
+            "max_tokens": 1024,
+            "top_p": 1
         }
     },
     "prompt_config": {
-        "name": "code-explain",
-        "tenant": "nns",
-        "path": "prompts/code_explanation/prompt.yaml",
+        "name": "classification",
+        "path": "prompts/classification.yaml",
         "version": 1
     },
     "evaluator_config": {
         "metrics": [
             {
                 "type": "accuracy",
-                "aspect": "code-explanation"
+                "aspect": "classification-all"
             },
             {
                 "type": "latency"
@@ -35,12 +35,12 @@
         ]
     },
     "dataset_config": {
-        "data_path": "datasets/code_explanation/python_desc_df.csv",
-        "label_col": "label",
+        "data_path": "datasets/classification.csv",
+        "label_col": "true_label",
         "sanity_test": true
     },
     "controller_config": {
-        "save_path": "results/code_explanation/python",
+        "save_path": "results/tests",
         "parallelism": 12,
         "use_streaming": false,
         "save_inference": true

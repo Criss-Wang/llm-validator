@@ -3,6 +3,9 @@ from .classification import ClassificationAccuracy, CosineSimilarity
 from .text_quality import JsonCorrectnessMetric, RegexMatch
 from .code_generation import CodeGenerationAccuracy
 from .code_explanation import CodeExplanationAccuracy
+from .qa import QuestionAnsweringAccuracy
+from .summarization import SummarizationAccuracy
+from .function_calling import FunctionCallingAccuracy
 
 __all__ = [
     "AccuracyMetric",
@@ -12,4 +15,7 @@ __all__ = [
     "RegexMatch",
     "CodeGenerationAccuracy",
     "CodeExplanationAccuracy",
+    "QuestionAnsweringAccuracy",
+    "SummarizationAccuracy",
+    "FunctionCallingAccuracy",
 ]
