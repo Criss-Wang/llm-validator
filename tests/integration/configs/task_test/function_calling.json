@@ -10,7 +10,7 @@
     "model_type": "claude-3.5",
     "model_options": {
       "temperature": 0,
-      "max_tokens": 1024,
+      "max_tokens": 8192,
       "top_p": 1
     }
   },
@@ -23,19 +23,13 @@
     "metrics": [
       {
         "type": "accuracy",
-        "aspect": "classification-all"
-      },
-      {
-        "type": "latency"
-      },
-      {
-        "type": "cost"
+        "aspect": "function-calling"
       }
     ]
   },
   "dataset_config": {
     "data_path": "tests/integration/datasets/task_test/function_calling.csv",
-    "label_col": "true_label",
+    "label_col": "expected_call",
     "sanity_test": true
   },
   "controller_config": {

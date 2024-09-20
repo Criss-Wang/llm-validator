@@ -6,6 +6,7 @@ from llm_validation.components.metrics.accuracy import (
     CodeExplanationAccuracy,
     QuestionAnsweringAccuracy,
     SummarizationAccuracy,
+    FunctionCallingAccuracy,
 )
 from llm_validation.components.metrics.cost import CostMetric
 from llm_validation.components.metrics.latency import LatencyMetric
@@ -18,6 +19,7 @@ ACCURACY_METRIC_MAPPING = {
     "code-explanation": CodeExplanationAccuracy,
     "qa": QuestionAnsweringAccuracy,
     "summarization": SummarizationAccuracy,
+    "function-calling": FunctionCallingAccuracy,
 }
 
 

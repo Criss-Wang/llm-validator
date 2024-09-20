@@ -1,91 +1,55 @@
 import ast
+import json
 
 import numpy as np
-from sentence_transformers import SentenceTransformer, util
 
 
 from .base import AccuracyWithGroundTruth
-from llm_validation.app.configs import MetricConfig
 
 
-class FunctionCallMetric(AccuracyWithGroundTruth):
-    def __init__(self, config: MetricConfig):
-        super().__init__(config)
-        self._model = SentenceTransformer(config.kwargs["model"])
-
+class FunctionCallingAccuracy(AccuracyWithGroundTruth):
     async def grade(self, input, output: str, label: str):
+        function_accuracy, argument_correctness = -1, -1
         try:
-            gen_response = ast.literal_eval(output)
-        except:
-            gen_response = {}
-        try:
-            exp_response = ast.literal_eval(label)
-        except:
-            exp_response = {}
-
-        # evaluate answer section existence match
-        answer_section_existence_match = False
-        if (
-            gen_response.get("answer", "") == ""
-            and exp_response.get("answer", "") == ""
-        ) or (
-            gen_response.get("answer", "") != ""
-            and exp_response.get("answer", "") != ""
-        ):
-            answer_section_existence_match = True
-
-        # evaluate function correctness
-        gen_func = gen_response.get("function", {"name": ""})
-        try:
-            exp_func = ast.literal_eval(exp_response.get("function", '{"name": ""}'))
-        except:
-            exp_func = {"name": ""}
-        function_correctness = gen_func.get("name", "") == exp_func.get("name", "")
-
-        # evaluate function parameters correctness
-        function_parameters_correctness = gen_func.get("arguments", "") == exp_func.get(
-            "arguments", ""
-        )
-
-        # evaluate answer similarity
-        embedding1 = self._model.encode(
-            gen_response.get("answer", ""), convert_to_tensor=True
-        )
-        embedding2 = self._model.encode(
-            exp_response.get("answer", ""), convert_to_tensor=True
-        )
-
-        cosine_similarity = util.pytorch_cos_sim(embedding1, embedding2).item()
+            try:
+                label_json = json.loads(label)
+                output_json = json.loads(output)
+            except:
+                label_json = ast.literal_eval(label)
+                output_json = ast.literal_eval(output)
+            function_accuracy = label_json["name"] == output_json["name"]
+            argument_correctness = label_json["parameters"] == output_json["parameters"]
+        except Exception as e:
+            print(e)
 
         return {
-            "answer_section_existence_match": answer_section_existence_match,
-            "function_correctness": function_correctness,
-            "function_parameters_correctness": function_parameters_correctness,
-            "similarity_score": cosine_similarity,
+            "function_accuracy": function_accuracy,
+            "argument_correctness": argument_correctness,
         }
 
+    def get_name(self):
+        return "FunctionCallingAccuracy"
+
     def aggregate(self):
-        cosine_similarities = self.scores["similarity_score"]
-        function_correctness = self.scores["function_correctness"]
-        function_parameters_correctness = self.scores["function_parameters_correctness"]
-        answer_section_existence_match = self.scores["answer_section_existence_match"]
+        function_accuracy = [
+            score for score in self.scores["function_accuracy"] if score != -1
+        ]
+        argument_correctness = [
+            score for score in self.scores["argument_correctness"] if score != -1
+        ]
         self.stats.update(
             {
-                "answer_section_existence_match_pct": np.mean(
-                    answer_section_existence_match
-                ),
-                "function_correct_pct": np.mean(function_correctness),
-                "function_parameters_correct_pct": np.mean(
-                    function_parameters_correctness
-                ),
+                "function_accuracy": sum(function_accuracy) / len(function_accuracy),
+                "argument_correctness": sum(argument_correctness)
+                / len(argument_correctness),
             }
         )
-        self.stats.update(
-            {
-                "similarity_score_mean": np.mean(cosine_similarities),
-                "similarity_score_max": np.max(cosine_similarities),
-                "similarity_score_min": np.min(cosine_similarities),
-                "similarity_score_p75": np.percentile(cosine_similarities, 75),
-                "similarity_score_p25": np.percentile(cosine_similarities, 25),
-            }
-        )
+        # self.stats.update(
+        #     {
+        #         "total_correct": sum(correctness),
+        #         "total_wrong": len(correctness) - sum(correctness),
+        #     }
+        # )
+        # self.stats.update(
+        #     classification_report(self.labels, self.responses, output_dict=True)
+        # )

@@ -3,12 +3,11 @@ import os
 
 # Run a command
 for client in [
-    # "chunk_validation",
-    # "code_explanation",
-    # "code_generation",
-    # "function_calling",
-    # "ner",
-    # "qa",
+    "chunk_validation",
+    "code_explanation",
+    "code_generation",
+    "function_calling",
+    "qa",
     "summarization",
 ]:
     _ = os.system(

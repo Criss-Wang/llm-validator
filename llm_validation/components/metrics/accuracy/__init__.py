@@ -5,6 +5,7 @@ from .code_generation import CodeGenerationAccuracy
 from .code_explanation import CodeExplanationAccuracy
 from .qa import QuestionAnsweringAccuracy
 from .summarization import SummarizationAccuracy
+from .function_calling import FunctionCallingAccuracy
 
 __all__ = [
     "AccuracyMetric",
@@ -16,4 +17,5 @@ __all__ = [
     "CodeExplanationAccuracy",
     "QuestionAnsweringAccuracy",
     "SummarizationAccuracy",
+    "FunctionCallingAccuracy",
 ]

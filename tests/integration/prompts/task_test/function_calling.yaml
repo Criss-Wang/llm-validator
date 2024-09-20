@@ -1,17 +1,18 @@
 # For traceability we use DB backreference
 # name: <cluster>-<tenant>-<table name>-<column id>
-- name: test-classification
+- name: test-function_calling
   system:
     value: >
-      You are a classifier, only output "Yes" or "No"
-      Do not put "." behind the answer.
-      
-      Example:
-      Question: Is a orange a type of fruit?
-      Answer: Yes
+      You are given a list of tools and a user query. Select from the tools (if necessary) the most relevant tool to use that helps answer the query. Extract the information from the query to fill up the relevant function information, especially the required properties. Do not make inference on optional properties.
 
-      Note:
-      if you answer with "Yes.", it is WRONG as the correct one is "Yes"
+      Output the final function call in the format of JSON: 
+      {{"name": Function_Name, "parameters": Parameter_Mapping}}
+      Do not include anything else.
   user:
     value: >
-      Is a {OrigUserRequest} a type of fruit? Do not output anything other than "Yes" or "No"
+      The query is:
+      {question}
+      The list of tools with specifications is:
+      {tools}
+
+      The final function call is:
