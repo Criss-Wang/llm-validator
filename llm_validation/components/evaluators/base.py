@@ -34,7 +34,6 @@ class Evaluator:
 
         for metric in self.metrics:
             evaluation_scores[metric.get_name()] = metric.get_scores()
-
         return evaluation_scores
 
     def aggregate(self) -> Dict:

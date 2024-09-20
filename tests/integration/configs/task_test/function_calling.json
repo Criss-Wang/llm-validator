@@ -1,7 +1,7 @@
 {
   "project": "integration-test",
   "task_config": {
-    "name": "code_explanation"
+    "name": "function_calling"
   },
   "client_config": {
     "client_name": "anthropic",
@@ -15,8 +15,8 @@
     }
   },
   "prompt_config": {
-    "name": "test-code_explanation",
-    "path": "tests/integration/prompts/code_explanation.yaml",
+    "name": "test-function_calling",
+    "path": "tests/integration/prompts/task_test/function_calling.yaml",
     "version": 1
   },
   "evaluator_config": {
@@ -34,7 +34,7 @@
     ]
   },
   "dataset_config": {
-    "data_path": "tests/integration/datasets/test_code_explanation.csv",
+    "data_path": "tests/integration/datasets/task_test/function_calling.csv",
     "label_col": "true_label",
     "sanity_test": true
   },

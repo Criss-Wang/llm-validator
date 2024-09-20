@@ -1,0 +1,15 @@
+- name: test-classification
+  system:
+    value: >
+      You are a classifier, only output "Yes" or "No"
+      Do not put "." behind the answer.
+      
+      Example:
+      Question: Is a orange a type of fruit?
+      Answer: Yes
+
+      Note:
+      if you answer with "Yes.", it is WRONG as the correct one is "Yes"
+  user:
+    value: >
+      Is a {OrigUserRequest} a type of fruit? Do not output anything other than "Yes" or "No"

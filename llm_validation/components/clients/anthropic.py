@@ -60,6 +60,37 @@ class AnthropicClient(Client):
             usage=dict(response.usage),
         )
 
+    def sync_predict(self, messages: List) -> Dict:
+        """
+        Message(
+            id='msg_01MjXH1yu3f6GAjkjq9V1J8F',
+            content=[TextBlock(text='text_content', type='text')],
+            model='claude-3-5-sonnet-20240620',
+            role='assistant',
+            stop_reason='end_turn',
+            stop_sequence=None,
+            type='message',
+            usage=Usage(input_tokens=19, output_tokens=23)
+        )
+        """
+        client = anthropic.Anthropic(api_key=self.api_key)
+
+        response = client.messages.create(
+            model=self.model_name,
+            system=messages[0]["content"],
+            messages=messages[1:],
+            **self.model_options,
+        )
+        return dict(
+            text=response.content[0].text,
+            raw_response=response,
+            usage=dict(response.usage),
+        )
+
+    def extract_usage(self, type: str = "input") -> int:
+        if type == "input" and self.input_tokens:
+            return self.input_tokens
+
     def extract_usage(self, type: str = "input") -> int:
         if type == "input" and self.input_tokens:
             return self.input_tokens

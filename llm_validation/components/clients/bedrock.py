@@ -78,6 +78,9 @@ class BedrockClient(Client):
             ),
         )
 
+    def sync_predict(self, messages: List):
+        raise NotImplementedError
+
     def extract_usage(self, type: str = "input") -> int:
         if type == "input" and self.input_tokens:
             return self.input_tokens

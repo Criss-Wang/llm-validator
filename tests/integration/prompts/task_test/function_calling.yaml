@@ -12,19 +12,6 @@
 
       Note:
       if you answer with "Yes.", it is WRONG as the correct one is "Yes"
-    parameters:
-    defaults:
-      inputs:
   user:
     value: >
       Is a {OrigUserRequest} a type of fruit? Do not output anything other than "Yes" or "No"
-    parameters: OrigUserRequest-CompanyName-CompanySupportURL-ConvHistory
-    defaults:
-      inputs:
-        OrigUserRequest:
-        CompanyName:
-        CompanySupportURL:
-        ConvHistory:
-  response:
-    hasSpecificIssue:
-    answer:

@@ -1,7 +1,7 @@
 {
   "project": "integration-test",
   "task_config": {
-    "name": "function_calling"
+    "name": "ner"
   },
   "client_config": {
     "client_name": "anthropic",
@@ -15,15 +15,15 @@
     }
   },
   "prompt_config": {
-    "name": "test-function_calling",
-    "path": "tests/integration/prompts/function_calling.yaml",
+    "name": "test-ner",
+    "path": "tests/integration/prompts/task_test/ner.yaml",
     "version": 1
   },
   "evaluator_config": {
     "metrics": [
       {
         "type": "accuracy",
-        "aspect": "classification-all"
+        "aspect": "qa"
       },
       {
         "type": "latency"
@@ -34,7 +34,7 @@
     ]
   },
   "dataset_config": {
-    "data_path": "tests/integration/datasets/test_function_calling.csv",
+    "data_path": "tests/integration/datasets/task_test/ner.csv",
     "label_col": "true_label",
     "sanity_test": true
   },

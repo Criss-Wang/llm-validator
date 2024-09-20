@@ -10,7 +10,7 @@ from llm_validation.components.factories.client_factory import init_client
 from llm_validation.components.prompts import Prompt
 
 
-class CodeExplanationAccuracy(AccuracyWithGroundTruth):
+class QuestionAnsweringAccuracy(AccuracyWithGroundTruth):
     def __init__(self, config: MetricConfig):
         super().__init__(config)
         self.init_llm_as_judge(config.kwargs)
@@ -24,8 +24,8 @@ class CodeExplanationAccuracy(AccuracyWithGroundTruth):
             model_options=var_map.get("model_options", {}),
         )
         prompt_config = PromptConfig(
-            name=var_map.get("prompt_name", "code-explain-judge"),
-            path=var_map.get("prompt_path", "prompts/code_explanation/prompt.yaml"),
+            name=var_map.get("prompt_name", "qa-judge"),
+            path=var_map.get("prompt_path", "prompts/qa/prompt.yaml"),
             version=var_map.get("prompt_verions", 1),
         )
         self.client = init_client(client_config)
@@ -33,9 +33,12 @@ class CodeExplanationAccuracy(AccuracyWithGroundTruth):
 
     async def run_grading(self, results, include_labels):
         tasks = [
-            self.grade(input, output)
-            for input, output in zip(
-                results.raw_inputs["whole_func_string"], results.extracted_responses
+            self.grade((context, question), output, label)
+            for context, question, output, label in zip(
+                results.raw_inputs["context"],
+                results.raw_inputs["question"],
+                results.extracted_responses,
+                results.labels,
             )
         ]
 
@@ -51,8 +54,7 @@ class CodeExplanationAccuracy(AccuracyWithGroundTruth):
 
     async def grade(self, input, output: str, label: str = None):
         messages = self.prompt.transform(
-            code_snippet=input,
-            explanation=output,
+            context=input[0], question=input[1], answer=output
         )
         try:
             result_content = await self.client.predict(messages)
@@ -82,4 +84,4 @@ class CodeExplanationAccuracy(AccuracyWithGroundTruth):
         self.stats.update(dict(Counter(code_score)))
 
     def get_name(self):
-        return "CodeExplanationAccuracy"
+        return "QuestionAnsweringAccuracy"

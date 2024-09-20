@@ -1,35 +1,32 @@
 import json
 from collections import Counter
+from typing import Dict
 
 from .base import AccuracyWithGroundTruth
 from llm_validation.app.configs import MetricConfig, ClientConfig, PromptConfig
-from llm_validation.components.clients import OpenAiClient
+from llm_validation.components.factories.client_factory import init_client
 from llm_validation.components.prompts import Prompt
 
 
 class CodeGenerationAccuracy(AccuracyWithGroundTruth):
     def __init__(self, config: MetricConfig):
         super().__init__(config)
-        self.init_llm_as_judge()
+        self.init_llm_as_judge(config.kwargs)
 
-    def init_llm_as_judge(self):
+    def init_llm_as_judge(self, var_map: Dict):
         client_config = ClientConfig(
-            client_name="openai",
-            client_type="third_party_llm",
-            model_name="GPT4",
-            model_type="gpt-4",
-            model_options={
-                "temperature": 0,
-                "top_p": 1,
-                "max_tokens": 4096,
-            },
+            client_name=var_map.get("client_name", "anthropic"),
+            client_type=var_map.get("client_type", "third_party_llm"),
+            model_name=var_map.get("model_name", "claude-3-5-sonnet-20240620"),
+            model_type=var_map.get("model_type", "claude-3.5-sonnet"),
+            model_options=var_map.get("model_options", {}),
         )
         prompt_config = PromptConfig(
-            name="codegen-judge",
-            path="prompts/judge/prompts.yml",
-            version=1,
+            name=var_map.get("prompt_name", "code-generation-judge"),
+            path=var_map.get("prompt_path", "prompts/code_generation/prompt.yaml"),
+            version=var_map.get("prompt_verions", 1),
         )
-        self.client = OpenAiClient(client_config)
+        self.client = init_client(client_config)
         self.prompt = Prompt(prompt_config)
 
     def get_name(self):
@@ -42,7 +39,7 @@ class CodeGenerationAccuracy(AccuracyWithGroundTruth):
             expected_code_answer=label,
         )
         try:
-            result_content = self.client.sync_predict(messages)
+            result_content = await self.client.predict(messages)
             result_content = json.loads(result_content["text"])
             reason = result_content["reason"]
             code_quality = result_content["code_quality"]
